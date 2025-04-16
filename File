@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Local Talent Showcase</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      background: #f9f9f9;
+    }
+
+    header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    form {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    form input, form select, form textarea, form button {
+      display: block;
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+
+    .like-btn {
+      background: none;
+      border: none;
+      font-size: 1.2em;
+      cursor: pointer;
+      color: #e74c3c;
+    }
+
+    /* Chatbot */
+    #chatbot {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #ffffff;
+      width: 300px;
+      border: 1px solid #ccc;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      overflow: hidden;
+      z-index: 999;
+    }
+
+    #chatbot h4 {
+      background: #4CAF50;
+      margin: 0;
+      padding: 10px;
+      color: white;
+      text-align: center;
+    }
+
+    #chatbox {
+      height: 220px;
+      overflow-y: auto;
+      padding: 10px;
+      font-size: 14px;
+    }
+
+    #userInput {
+      border: none;
+      border-top: 1px solid #ccc;
+      padding: 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+
+<body>
+  <header>🌟 Local Talent Showcase 🌟</header>
+
+  <div class="container">
+    <form action="https://docs.google.com/forms/d/e/YOUR_GOOGLE_FORM_ID/formResponse" method="POST" target="_blank">
+      <input name="entry.1234567890" placeholder="Your Name" required />
+      <input name="entry.2345678901" placeholder="Class" required />
+      <select name="entry.3456789012">
+        <option>Art</option>
+        <option>Dance</option>
+        <option>Football</option>
+        <option>Poetry</option>
+      </select>
+      <textarea name="entry.4567890123" placeholder="Describe your talent" required></textarea>
+      <button type="submit">Submit Talent</button>
+    </form>
+
+    <label for="filter">Filter by Talent Type:</label>
+    <select id="filter">
+      <option value="all">All</option>
+      <option value="Art">Art</option>
+      <option value="Dance">Dance</option>
+      <option value="Football">Football</option>
+      <option value="Poetry">Poetry</option>
+    </select>
+
+    <div class="cards">
+      <div class="card" data-category="Art">
+        <h3>Painting by Anika</h3>
+        <p>A beautiful nature scene.</p>
+        <button class="like-btn" onclick="likeTalent(this)">❤️ Like (<span>0</span>)</button>
+      </div>
+      <div class="card" data-category="Football">
+        <h3>Goal by Fahed</h3>
+        <p>Scored in the school finals!</p>
+        <button class="like-btn" onclick="likeTalent(this)">❤️ Like (<span>0</span>)</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Chatbot -->
+  <div id="chatbot">
+    <h4>🎤 TalentBot</h4>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="Ask me something..." />
+  </div>
+
+  <script>
+    // Filter Talent Cards
+    document.getElementById('filter').addEventListener('change', function () {
+      const category = this.value;
+      document.querySelectorAll('.card').forEach(card => {
+        card.style.display = (category === "all" || card.dataset.category === category) ? "block" : "none";
+      });
+    });
+
+    // Like Button Logic
+    function likeTalent(btn) {
+      const span = btn.querySelector("span");
+      span.textContent = parseInt(span.textContent) + 1;
+    }
+
+    // Custom Chatbot Logic
+    const chatbox = document.getElementById("chatbox");
+    const input = document.getElementById("userInput");
+
+    input.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const msg = input.value.trim();
+        if (!msg) return;
+        showMessage("👤 " + msg);
+        input.value = "";
+
+        const reply = getCustomBotReply(msg);
+        showMessage("🤖 " + reply);
+      }
+    });
+
+    function showMessage(message) {
+      const p = document.createElement("p");
+      p.textContent = message;
+      chatbox.appendChild(p);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
+    function getCustomBotReply(message) {
+      // Custom bot logic for responses based on user input
+      if (message.toLowerCase().includes("talent")) {
+        return "That's great! Tell me more about your talent!";
+      } else if (message.toLowerCase().includes("how")) {
+        return "You can submit your talent by filling out the form above.";
+      } else if (message.toLowerCase().includes("help")) {
+        return "Feel free to ask anything related to the showcase!";
+      } else {
+        return "I'm not sure how to respond to that. Try asking about talents!";
+      }
+    }
+  </script>
+</body>
+</html>
